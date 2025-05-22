@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Formularios de Transporte</h2>
+    <a href="{% url 'transport_form_create' %}" class="btn btn-primary mb-3">Nuevo Formulario</a>
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Guía</th>
+                    <th>Patente</th>
+                    <th>Estación de carga</th>
+                    <th>Odómetro</th>
+                    <th>Tipo de combustible</th>
+                    <th>Total de carga</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in forms %}
+                <tr>
+                    <td>{{ form.date }}</td>
+                    <td>{{ form.guide }}</td>
+                    <td>{{ form.patent }}</td>
+                    <td>{{ form.loading_station }}</td>
+                    <td>{{ form.odometer }}</td>
+                    <td>{{ form.get_fuel_type_display }}</td>
+                    <td>{{ form.load_total }}</td>
+                    <td>
+                        {% if form.image %}
+                            <a href="{{ form.image.url }}" class="image-preview">
+                                <img src="{{ form.image.url }}" class="img-thumbnail" style="max-width: 100px; height: 100px; object-fit: cover;">
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'transport_form_edit' form.pk %}" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="{% url 'transport_form_delete' form.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No hay formularios registrados</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

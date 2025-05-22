@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Editar Formulario de Transporte</h2>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.date.id_for_label }}">Fecha</label>
+                        {{ form.date }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.guide.id_for_label }}">Guía</label>
+                        {{ form.guide }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.patent.id_for_label }}">Patente</label>
+                        {{ form.patent }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.loading_station.id_for_label }}">Estación de carga</label>
+                        {{ form.loading_station }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.odometer.id_for_label }}">Odómetro</label>
+                        {{ form.odometer }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.fuel_type.id_for_label }}">Tipo de combustible</label>
+                        {{ form.fuel_type }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="{{ form.load_total.id_for_label }}">Total de carga</label>
+                        {{ form.load_total }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="{{ form.image.id_for_label }}">Imagen</label>
+                        {{ form.image }}
+                        {% if form.instance.image %}
+                            <div class="mt-2">
+                                <a href="{{ form.instance.image.url }}" class="image-preview">
+                                 <img src="{{ form.instance.image.url }}" class="img-thumbnail" style="max-width: 200px;">
+                             </a>
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">Formatos aceptados: JPG, PNG, GIF. Máximo tamaño: 5MB</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <a href="{% url 'transport_form_list' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
