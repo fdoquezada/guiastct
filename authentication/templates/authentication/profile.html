@@ -1,7 +1,92 @@
 {% extends 'base.html' %}
 
+{% block title %}Mi Perfil{% endblock %}
+
 {% block content %}
-    {% block title %}Profile{% endblock %}
-    <p>Esta es la pagina de perfil</p>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Avatar">
+                        <h5 class="card-title">{{ user.username }}</h5>
+                        <p class="text-muted">{{ user.email }}</p>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'edit_profile' %}" class="btn btn-primary">Editar Perfil</a>
+                            <a href="{% url 'change_password' %}" class="btn btn-secondary">Cambiar Contraseña</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Información Personal</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Nombre:</strong> {{ user.first_name }}</p>
+                                <p><strong>Apellido:</strong> {{ user.last_name }}</p>
+                                <p><strong>Fecha de Registro:</strong> {{ user.date_joined|date:"d/m/Y" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Estado:</strong> 
+                                    {% if user.is_active %}
+                                        <span class="badge bg-success">Activo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactivo</span>
+                                    {% endif %}
+                                </p>
+                                <p><strong>Último Login:</strong> {{ user.last_login|date:"d/m/Y H:i" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Formularios Recientes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if recent_forms %}
+                                    {% for form in recent_forms %}
+                                    <tr>
+                                        <td>{{ form.date|date:"d/m/Y" }}</td>
+                                        <td>{{ form.fuel_type }}</td>
+                                        <td>
+                                            <span class="badge bg-success">Completado</span>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'transport_form_detail' form.id %}" class="btn btn-sm btn-primary">Ver</a>
+                                            <a href="{% url 'transport_form_edit' form.id %}" class="btn btn-sm btn-warning">Editar</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">No hay formularios recientes</td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
     

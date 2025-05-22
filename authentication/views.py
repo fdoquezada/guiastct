@@ -4,6 +4,10 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import logout as auth_logout
+from django.utils import timezone
+from formulario.models import TransportForm
+from django.db.models import Q
+from .forms import EditProfileForm, ChangePasswordForm
 
 # Create your views here.
 def login_view(request):
@@ -29,14 +33,51 @@ def logout_view(request):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            user = form.save()
+            # Iniciar sesión automáticamente después del registro
+            login(request, user)
+            return redirect('profile')
     else:
-        form = UserCreationForm()
+        form = UserRegistrationForm()
     return render(request, 'authentication/register.html', {'form': form})
 
 @login_required
 def profile(request):
-    return render(request, 'authentication/profile.html')
+    # Obtener los últimos 5 formularios del usuario
+    try:
+        recent_forms = TransportForm.objects.filter(
+            created_by=request.user
+        ).order_by('-created_at')[:5]
+    except TransportForm.DoesNotExist:
+        recent_forms = None
+    
+    context = {
+        'recent_forms': recent_forms,
+    }
+    return render(request, 'authentication/profile.html', context)
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Perfil actualizado exitosamente')
+            return redirect('profile')
+    else:
+        form = EditProfileForm(instance=request.user)
+    return render(request, 'authentication/edit_profile.html', {'form': form})
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = ChangePasswordForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Contraseña cambiada exitosamente')
+            return redirect('profile')
+    else:
+        form = ChangePasswordForm(user=request.user)
+    return render(request, 'authentication/change_password.html', {'form': form})

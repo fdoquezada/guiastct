@@ -15,7 +15,9 @@ def transport_form_create(request):
     if request.method == 'POST':
         form = TransportFormForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            transport_form = form.save(commit=False)
+            transport_form.created_by = request.user
+            transport_form.save()
             messages.success(request, 'Formulario creado exitosamente')
             return redirect('transport_form_list')
     else:

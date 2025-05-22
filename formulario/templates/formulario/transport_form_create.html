@@ -6,7 +6,7 @@
     
     <div class="card">
         <div class="card-body">
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" id="transport-form">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -49,6 +49,9 @@
                         <label for="{{ form.image.id_for_label }}">Imagen</label>
                         {{ form.image }}
                         <small class="form-text text-muted">Formatos aceptados: JPG, PNG, GIF. Máximo tamaño: 5MB</small>
+                        <div class="mt-2">
+                            <img src="" alt="Preview" class="img-fluid d-none image-preview" style="max-height: 200px;">
+                        </div>
                     </div>
                 </div>
                 <div class="row">
